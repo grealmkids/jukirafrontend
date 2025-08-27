@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
+import { BirthdayFormComponent } from '../components/birthday-form/birthday-form.component';
 
 
 @NgModule({
@@ -12,8 +13,9 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    BirthdayFormComponent // Import standalone component directly
   ],
-  declarations: [HomePage]
+  declarations: [] // HomePage is now standalone
 })
 export class HomePageModule {}

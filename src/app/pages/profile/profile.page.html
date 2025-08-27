@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>User Information</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label>Name:</ion-label>
+        <ion-text>{{ user.name }}</ion-text>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Email:</ion-label>
+        <ion-text>{{ user.email }}</ion-text>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="ion-margin-top">
+    <ion-card-header>
+      <ion-card-title>Credit Balance</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label>Current Credits:</ion-label>
+        <ion-text>{{ user.credits }}</ion-text>
+      </ion-item>
+      <ion-button expand="block" class="ion-margin-top" routerLink="/credits">
+        Buy More Credits
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/birthday-details/' + birthday?.id"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Card Preview</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <!-- Placeholder for AI-generated card -->
+    <div class="card-placeholder ion-text-center">
+      <img src="https://via.placeholder.com/1024x1024.png/0000FF/FFFFFF?text=AI+Card+for+{{birthday?.name}}" alt="Generated Card"/>
+      <ion-card-header>
+        <ion-card-title>Happy Birthday {{ birthday?.name }}!</ion-card-title>
+      </ion-card-header>
+    </div>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Edit your message</ion-label>
+        <ion-textarea [(ngModel)]="message" rows="4"></ion-textarea>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="presentSendOptions()">
+    Send Card
+    <ion-icon slot="end" name="send"></ion-icon>
+  </ion-button>
+</ion-content>

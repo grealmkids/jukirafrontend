@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">Delivery History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let log of deliveryLogs">
+      <ion-label>
+        <h2>Card for {{ log.recipient }}</h2>
+        <p>Sent via: {{ log.channel }}</p>
+        <p>Status: <ion-text [color]="log.status === 'Sent' ? 'success' : 'danger'">{{ log.status }}</ion-text></p>
+        <p>Date: {{ log.date | date:'short' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-text *ngIf="deliveryLogs.length === 0" class="ion-text-center ion-padding-top">
+    <p>No delivery logs found.</p>
+  </ion-text>
+</ion-content>

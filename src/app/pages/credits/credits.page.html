@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Buy Credits</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Your Current Credits</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+      <h1>{{ currentCredits }}</h1>
+      <p>credits available</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="ion-margin-top">
+    <ion-card-header>
+      <ion-card-title>Choose a Plan</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let plan of plans" (click)="selectPlan(plan)" [class.selected]="selectedPlan === plan">
+          <ion-label>
+            <h2>{{ plan.name }}</h2>
+            <p>{{ plan.credits }} credits</p>
+          </ion-label>
+          <ion-note slot="end">{{ plan.price | currency:'USD' }}</ion-note>
+        </ion-item>
+      </ion-list>
+
+      <ion-button expand="block" class="ion-margin-top" [disabled]="!selectedPlan" (click)="purchaseCredits()">
+        Purchase {{ selectedPlan?.credits || 0 }} Credits
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
