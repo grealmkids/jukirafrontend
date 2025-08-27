@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-birthday-details',
@@ -13,36 +14,31 @@ import { IonicModule } from '@ionic/angular';
 export class BirthdayDetailsPage implements OnInit {
   birthday: any;
 
-  // Mock data - in a real app, this would come from a service
-  private mockBirthdays = [
-    {
-      id: 1,
-      name: 'John Doe',
-      date: new Date('2025-09-15'),
-      photoUrl: 'https://i.pravatar.cc/150?u=john',
-      category: 'Friend',
-      daysUntil: 0
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      date: new Date('2025-10-01'),
-      photoUrl: 'https://i.pravatar.cc/150?u=jane',
-      category: 'Family',
-      daysUntil: 0
-    }
-  ];
-
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.birthday = this.mockBirthdays.find(b => b.id === +id);
-      if (this.birthday) {
-        this.birthday.daysUntil = this.calculateDaysUntil(this.birthday.date);
-      }
+      this.fetchBirthdayDetails(id);
     }
+  }
+
+  fetchBirthdayDetails(id: string) {
+    this.http.get(`http://localhost:3000/birthdays/${id}`)
+      .subscribe({
+        next: (response: any) => {
+          this.birthday = response.birthday;
+          if (this.birthday) {
+            this.birthday.date = new Date(this.birthday.date); // Convert date string to Date object
+            this.birthday.daysUntil = this.calculateDaysUntil(this.birthday.date);
+          }
+          console.log('Birthday details fetched:', this.birthday);
+        },
+        error: (error: any) => {
+          console.error('Failed to fetch birthday details:', error);
+          alert('Failed to load birthday details.');
+        }
+      });
   }
 
   calculateDaysUntil(birthday: Date): number {

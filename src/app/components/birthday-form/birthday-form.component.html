@@ -23,10 +23,15 @@
       <ion-item>
         <ion-label>Category</ion-label>
         <ion-select formControlName="category" interface="popover">
-          <ion-select-option value="Family">Family</ion-select-option>
-          <ion-select-option value="Friend">Friend</ion-select-option>
-          <ion-select-option value="Client">Client</ion-select-option>
+          <ion-select-option value="family">Family</ion-select-option>
+          <ion-select-option value="friends">Friend</ion-select-option>
+          <ion-select-option value="clients">Client</ion-select-option>
         </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Photo URL (Optional)</ion-label>
+        <ion-input formControlName="photoUrl" type="url"></ion-input>
       </ion-item>
     </ion-list>
 

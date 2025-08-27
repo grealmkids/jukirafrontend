@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { BirthdayFormComponent } from '../components/birthday-form/birthday-form.component';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -14,27 +15,30 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomePage implements OnInit {
 
-  birthdays = [
-    {
-      id: 1,
-      name: 'John Doe',
-      date: new Date('2025-09-15'),
-      photoUrl: 'https://i.pravatar.cc/150?u=john',
-      daysUntil: 0
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      date: new Date('2025-10-01'),
-      photoUrl: 'https://i.pravatar.cc/150?u=jane',
-      daysUntil: 0
-    }
-  ];
+  birthdays: any[] = []; // Initialize as empty array
 
-  constructor(private router: Router, private modalCtrl: ModalController) {}
+  constructor(private router: Router, private modalCtrl: ModalController, private http: HttpClient) {}
 
   ngOnInit() {
-    this.birthdays.forEach(b => b.daysUntil = this.calculateDaysUntil(b.date));
+    this.fetchBirthdays();
+  }
+
+  fetchBirthdays() {
+    this.http.get('http://localhost:3000/auth/birthdays')
+      .subscribe({
+        next: (response: any) => {
+          this.birthdays = response.birthdays.map((b: any) => ({
+            ...b,
+            date: new Date(b.date),
+            daysUntil: this.calculateDaysUntil(new Date(b.date))
+          }));
+          console.log('Birthdays fetched:', this.birthdays);
+        },
+        error: (error: any) => {
+          console.error('Failed to fetch birthdays:', error);
+          alert('Failed to load birthdays.');
+        }
+      });
   }
 
   calculateDaysUntil(birthday: Date): number {
@@ -59,19 +63,28 @@ export class HomePage implements OnInit {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'submit') {
-      const newBirthday = {
-        id: this.birthdays.length + 1, // Mock ID
-        name: data.name,
-        date: new Date(data.date),
-        photoUrl: 'https://i.pravatar.cc/150?u=' + (this.birthdays.length + 1),
-        daysUntil: 0
-      };
-      newBirthday.daysUntil = this.calculateDaysUntil(newBirthday.date);
-      this.birthdays.push(newBirthday);
+      this.http.post('http://localhost:3000/birthdays', data)
+        .subscribe({
+          next: (response: any) => {
+            const newBirthday = {
+              ...response.birthday,
+              date: new Date(response.birthday.date),
+              daysUntil: this.calculateDaysUntil(new Date(response.birthday.date))
+            };
+            this.birthdays.push(newBirthday);
+            console.log('Birthday added via backend:', newBirthday);
+            alert('Birthday added successfully!');
+          },
+          error: (error: any) => {
+            console.error('Failed to add birthday:', error);
+            alert('Failed to add birthday: ' + (error.error.message || 'Unknown error'));
+          }
+        });
     }
   }
 
   deleteBirthday(birthdayId: number) {
+    // For now, just remove from local array. In a real app, this would be a DELETE to backend
     this.birthdays = this.birthdays.filter(b => b.id !== birthdayId);
   }
 

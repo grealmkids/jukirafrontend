@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-card-preview',
@@ -14,6 +15,12 @@ import { ActionSheetController, IonicModule } from '@ionic/angular';
 export class CardPreviewPage implements OnInit {
   birthday: any;
   message = 'Wishing you the best on your special day!';
+  generatedCards: any[] = [];
+  selectedCard: any; // Stores the ID of the selected card
+
+  get currentSelectedCard() {
+    return this.generatedCards.find(card => card.id === this.selectedCard);
+  }
 
   // Mock data - in a real app, this would come from a service
   private mockBirthdays = [
@@ -35,14 +42,42 @@ export class CardPreviewPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.birthday = this.mockBirthdays.find(b => b.id === +id);
+      // Automatically generate cards when the page loads
+      this.generateCardVariations();
     }
+  }
+
+  generateCardVariations() {
+    if (!this.birthday) return;
+
+    console.log('Generating card variations for:', this.birthday.name);
+    // Call backend API to generate cards
+    this.http.post('http://localhost:3000/cards/generate', {
+      birthday_id: this.birthday.id,
+      message: this.message,
+      theme: 'festive' // Example theme
+    })
+    .subscribe({
+      next: (response: any) => {
+        this.generatedCards = response.cards;
+        if (this.generatedCards.length > 0) {
+          this.selectedCard = this.generatedCards[0].id; // Select the first card by default
+        }
+        console.log('Generated cards:', this.generatedCards);
+      },
+      error: (error: any) => {
+        console.error('Failed to generate cards:', error);
+        alert('Failed to generate cards: ' + (error.error.message || 'Unknown error'));
+      }
+    });
   }
 
   async presentSendOptions() {

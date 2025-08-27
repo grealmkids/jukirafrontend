@@ -8,10 +8,15 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-card>
-    <!-- Placeholder for AI-generated card -->
+  <ion-segment [(ngModel)]="selectedCard" scrollable>
+    <ion-segment-button *ngFor="let card of generatedCards" [value]="card.id">
+      <img [src]="card.url" class="segment-thumbnail" />
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-card *ngIf="currentSelectedCard">
     <div class="card-placeholder ion-text-center">
-      <img src="https://via.placeholder.com/1024x1024.png/0000FF/FFFFFF?text=AI+Card+for+{{birthday?.name}}" alt="Generated Card"/>
+      <img [src]="currentSelectedCard.url" alt="Generated Card"/>
       <ion-card-header>
         <ion-card-title>Happy Birthday {{ birthday?.name }}!</ion-card-title>
       </ion-card-header>
@@ -24,6 +29,11 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="generateCardVariations()">
+    Generate New Variations
+    <ion-icon slot="end" name="sync"></ion-icon>
+  </ion-button>
 
   <ion-button expand="block" class="ion-margin-top" (click)="presentSendOptions()">
     Send Card

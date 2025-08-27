@@ -26,7 +26,8 @@ export class BirthdayFormComponent implements OnInit {
     this.birthdayForm = this.fb.group({
       name: [this.birthday?.name || '', Validators.required],
       date: [this.birthday?.date ? new Date(this.birthday.date).toISOString().substring(0, 10) : '', Validators.required],
-      category: [this.birthday?.category || 'Friend', Validators.required]
+      category: [this.birthday?.category || 'Friend', Validators.required],
+      photoUrl: [this.birthday?.photoUrl || '']
     });
   }
 
